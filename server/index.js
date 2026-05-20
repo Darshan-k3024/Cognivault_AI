@@ -14,7 +14,7 @@ dotenv.config();
 
 const app = express();
 
-app.post("api/credits/webhook",express.raw({type:"application/json"}),stripeWebhook)
+app.post("/api/credits/webhook",express.raw({type:"application/json"}),stripeWebhook)
 
 app.use(cors({
     origin: "https://cognivault-aiclient1.onrender.com",
