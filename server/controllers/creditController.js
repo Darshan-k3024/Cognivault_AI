@@ -28,6 +28,8 @@ export const createCreditsOrder = async (req, res) => {
 
         }
 
+        console.log("CLIENT URL =", process.env.CLIENT_URL)
+
         const session = await stripe.checkout.sessions.create({
 
             mode: "payment",
