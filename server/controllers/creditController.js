@@ -28,7 +28,7 @@ export const createCreditsOrder = async (req, res) => {
 
         }
 
-        console.log("CLIENT URL =", process.env.CLIENT_URL)
+        // console.log("CLIENT URL =", process.env.CLIENT_URL)
 
         const session = await stripe.checkout.sessions.create({
 
@@ -36,9 +36,12 @@ export const createCreditsOrder = async (req, res) => {
 
             payment_method_types: ["card"],
 
-            success_url: `${process.env.CLIENT_URL}/payment-success`,
+            success_url: "https://cognivault-aiclient1.onrender.com/payment-success",
+cancel_url: "https://cognivault-aiclient1.onrender.com/payment-failed",
 
-            cancel_url: `${process.env.CLIENT_URL}/payment-failed`,
+            // success_url: `${process.env.CLIENT_URL}/payment-success`,
+
+            // cancel_url: `${process.env.CLIENT_URL}/payment-failed`,
 
             line_items: [
 
