@@ -40,7 +40,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/user",userRouter)
 app.use("/api/notes",notesRouter)
 app.use("/api/pdf",pdfRouter)
-app.use("/api/credit",creditRouter)
+// app.use("/api/credits",creditRouter)
+app.use("/api/credits",creditRouter)
 
 
 app.listen(PORT, () => {
