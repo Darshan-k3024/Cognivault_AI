@@ -11,7 +11,7 @@ import Notes from './pages/Notes'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFalied from './pages/PaymentFalied'
 
-export const serverUrl = "http://localhost:8000"
+export const serverUrl = "https://cognivault-ai-1.onrender.com"
 
 export default function App() {
 
