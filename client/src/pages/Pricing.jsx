@@ -18,7 +18,7 @@ function Pricing() {
 
       setPayingAmount(amount)
       setPaying(true)
-    const result = await axios.post(serverUrl + "/api/credit/order", { amount },{withCredentials:true})
+    const result = await axios.post(serverUrl + "/api/credits/order", { amount },{withCredentials:true})
 
     if(result.data.url){
       window.location.href = result.data.url
