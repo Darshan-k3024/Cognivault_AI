@@ -17,7 +17,7 @@ const app = express();
 app.post("api/credits/webhook",express.raw({type:"application/json"}),stripeWebhook)
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://cognivault-aiclient1.onrender.com",
     credentials: true,
     methods: ["GET","POST","PUT","DELETE"]
 }));
