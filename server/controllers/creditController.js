@@ -100,7 +100,103 @@ cancel_url: "https://cognivault-aiclient1.onrender.com/payment-failed",
 
 }
 
+// export const stripeWebhook = async (req, res) => {
+
+//     const sig = req.headers["stripe-signature"]
+
+//     let event
+
+//     try {
+
+//         event = stripe.webhooks.constructEvent(
+
+//             req.body,
+
+//             sig,
+
+//             process.env.STRIPE_WEBHOOK_SECRET
+
+//         )
+
+//     } catch (error) {
+
+//         console.error(
+
+//             "Webhook signature verification failed:",
+
+//             error
+
+//         )
+
+//         return res
+//             .status(400)
+//             .send(`Webhook Error: ${error.message}`)
+
+//     }
+
+//     if (event.type === "checkout.session.completed") {
+//           console.log("Webhook hit")
+//     console.log(event.type)
+
+//         const session = event.data.object
+
+//         const userId = session.metadata.userId
+
+//         const credits = Number(
+//             session.metadata.credits
+//         )
+
+//         if (!userId || !credits) {
+
+//             return res.status(400).json({
+
+//                 message: "Invalid session data"
+
+//             })
+
+//         }
+
+//         await UserModel.findByIdAndUpdate(
+
+//             userId,
+
+//             {
+
+//                 $inc: {
+
+//                     credits: credits
+
+//                 },
+
+//                 $set: {
+
+//                     isCreditAvailable: true
+
+//                 }
+
+//             },
+
+//             {
+
+//                 new: true
+
+//             }
+
+//         )
+
+//     }
+
+//     return res.status(200).json({
+
+//         received: true
+
+//     })
+
+// }
+
 export const stripeWebhook = async (req, res) => {
+
+    console.log("Webhook route hit")
 
     const sig = req.headers["stripe-signature"]
 
@@ -109,87 +205,54 @@ export const stripeWebhook = async (req, res) => {
     try {
 
         event = stripe.webhooks.constructEvent(
-
             req.body,
-
             sig,
-
             process.env.STRIPE_WEBHOOK_SECRET
-
         )
+
+        console.log("Event verified:", event.type)
 
     } catch (error) {
 
-        console.error(
+        console.error("Webhook signature verification failed:", error)
 
-            "Webhook signature verification failed:",
-
-            error
-
-        )
-
-        return res
-            .status(400)
-            .send(`Webhook Error: ${error.message}`)
-
+        return res.status(400).send(`Webhook Error: ${error.message}`)
     }
 
     if (event.type === "checkout.session.completed") {
-          console.log("Webhook hit")
-    console.log(event.type)
 
-        const session = event.data.object
+        try {
 
-        const userId = session.metadata.userId
+            const session = event.data.object
 
-        const credits = Number(
-            session.metadata.credits
-        )
+            console.log("Session metadata:", session.metadata)
 
-        if (!userId || !credits) {
+            const userId = session.metadata.userId
 
-            return res.status(400).json({
+            const credits = Number(session.metadata.credits)
 
-                message: "Invalid session data"
-
-            })
-
-        }
-
-        await UserModel.findByIdAndUpdate(
-
-            userId,
-
-            {
-
-                $inc: {
-
-                    credits: credits
-
+            const updatedUser = await UserModel.findByIdAndUpdate(
+                userId,
+                {
+                    $inc: {
+                        credits: credits
+                    },
+                    $set: {
+                        isCreditAvailable: true
+                    }
                 },
+                { new: true }
+            )
 
-                $set: {
+            console.log("Updated User:", updatedUser)
 
-                    isCreditAvailable: true
+        } catch (err) {
 
-                }
-
-            },
-
-            {
-
-                new: true
-
-            }
-
-        )
-
+            console.log("DB Update Error:", err)
+        }
     }
 
     return res.status(200).json({
-
         received: true
-
     })
-
 }
